@@ -56,6 +56,13 @@ var assetJSON = []byte(`{"asset_name":"marble1","color":"blue","size":"35","owne
 
 func TestMain(m *testing.M) {
 	ledgertestutil.SetupCoreYAMLConfig("./../../../../peer")
+	statedb := os.Getenv("CORE_LEDGER_STATE_STATEDATABASE")
+	if statedb == "CouchDB" {
+		os.Setenv("core.ledger.state.statedatabase","CouchDB" )
+		connectURL = os.Getenv("CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS")
+		username = os.Getenv("CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME")
+		password = os.Getenv("CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD")
+	}
 	os.Exit(m.Run())
 }
 

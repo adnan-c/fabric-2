@@ -13,13 +13,27 @@ unit-tests:
   image: hyperledger/fabric-testenv
   links:
     - vp
+    - couchdb
   environment:
     - UNIT_TEST_PEER_IP=vp
     - GO_LDFLAGS
     - OUTPUT
     - TEST_PKGS=${TEST_PKGS}
     - CORE_VM_DOCKER_ATTACHSTDOUT=true
+    - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+    - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb:5984
+    - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+    - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ${GOPATH}/src/github.com/hyperledger/fabric:/opt/gopath/src/github.com/hyperledger/fabric
   command: ./unit-test/run.sh
+
+couchdb:
+  container_name: couchdb
+  image: klaemo/couchdb:2.0.0
+  log_driver: none
+  ports:
+    - "5984:5984"
+
